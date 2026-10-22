@@ -3,7 +3,7 @@ from collections import deque
 from tools import *
 
 # 0 8
-def solve_dfs(inti_state: list[int]):
+def solve_dfs(inti_state: str):
     frontier = deque([Node(state=inti_state)])
 
     explored = set()
