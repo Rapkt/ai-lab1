@@ -5,6 +5,7 @@ from tools import *
 # 0 8
 def solve_itr_dfs(inti_state: str):
     lim = 1
+    nodes_expanded = 0
     while(1):
         
         frontier = deque([Node(state=inti_state)])
@@ -15,8 +16,10 @@ def solve_itr_dfs(inti_state: str):
         while frontier:
             node = frontier.pop()
             explored.add(str(node.state))
+            nodes_expanded += 1
             if(cheks(str(node.state))):
-                return node
+                path = node.get_path()
+                return path,len(path),nodes_expanded,lim
             
             if(node.depth <= lim):
                 state1 = movment("up",str(node.state))
@@ -25,11 +28,11 @@ def solve_itr_dfs(inti_state: str):
                 state4 = movment("left", str(node.state))
 
                 if(state1 != None and state1 not in explored):
-                    frontier.append(Node(state=state1,parent=node,move='up',depth=node.depth+1,cost=node.cost+1))
+                    frontier.append(Node(state=state1,parent=node,move='up',depth=node.depth+1))
                 if (state2 != None and state2 not in explored):
-                    frontier.append(Node(state=state2, parent=node, move='down', depth=node.depth + 1, cost=node.cost + 1))
+                    frontier.append(Node(state=state2, parent=node, move='down', depth=node.depth + 1))
                 if (state3 != None and state3 not in explored):
-                    frontier.append(Node(state=state3, parent=node, move='right', depth=node.depth + 1, cost=node.cost + 1))
+                    frontier.append(Node(state=state3, parent=node, move='right', depth=node.depth + 1))
                 if (state4 != None and state4 not in explored):
-                    frontier.append(Node(state=state4, parent=node, move='left', depth=node.depth + 1, cost=node.cost + 1))
+                    frontier.append(Node(state=state4, parent=node, move='left', depth=node.depth + 1))
         lim = lim + 1
