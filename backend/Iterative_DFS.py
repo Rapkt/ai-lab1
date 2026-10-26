@@ -2,12 +2,13 @@ from schema.Node import Node
 from collections import deque
 from tools import *
 
-# 0 8
-def solve_itr_dfs(inti_state: str):
+def solve_itr_dfs(inti_state: str,trace = None):
     lim = 1
     nodes_expanded = 0
     while(1):
-        
+        if trace is not None:
+            trace.clear()
+
         frontier = deque([Node(state=inti_state)])
 
         explored = set()
@@ -17,6 +18,7 @@ def solve_itr_dfs(inti_state: str):
             node = frontier.pop()
             explored.add(str(node.state))
             nodes_expanded += 1
+            node.log(trace)
             if(cheks(str(node.state))):
                 path = node.get_path()
                 return path,len(path),nodes_expanded,lim

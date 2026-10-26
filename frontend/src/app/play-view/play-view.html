@@ -1,0 +1,39 @@
+<section class="glass mx-auto flex max-w-md flex-col items-center p-8">
+  <div class="w-full max-w-[360px]">
+    <app-puzzle-board
+      [state]="board()"
+      [interactive]="!solved()"
+      [hint]="hint()"
+      (tileClick)="move($event)"
+    />
+  </div>
+
+  <div class="mt-6 flex w-full max-w-[360px] items-end justify-between">
+    <div>
+      <p class="text-3xl font-semibold tabular-nums">{{ moves() }}</p>
+      <p class="text-sm text-muted">Moves</p>
+    </div>
+    <p class="text-right text-sm text-muted" aria-live="polite">
+      @if (solved()) {
+        Solved in {{ moves() }} moves 🎉
+      } @else if (hintInfo()) {
+        Best path: <span class="best">{{ hintInfo() }}</span> from here
+      } @else {
+        Tap a tile next to the gap
+      }
+    </p>
+  </div>
+
+  @if (error()) {
+    <p class="mt-4 w-full rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-500" role="alert">
+      {{ error() }}
+    </p>
+  }
+
+  <div class="mt-6 grid w-full max-w-[360px] grid-cols-2 gap-3">
+    <button class="btn-soft py-3" (click)="newGame()">New game</button>
+    <button class="btn-primary" [disabled]="solved() || busy()" (click)="getHint()">
+      {{ busy() ? 'Thinking…' : 'Hint' }}
+    </button>
+  </div>
+</section>

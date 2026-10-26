@@ -1,0 +1,67 @@
+<section class="glass mb-6 p-6">
+  <div class="flex flex-wrap gap-2">
+    <input
+      class="field min-w-0 flex-1"
+      [value]="initState()"
+      maxlength="9"
+      inputmode="numeric"
+      (input)="setInit($any($event.target).value)"
+      aria-label="Starting board"
+    />
+    <button class="btn-soft" (click)="shuffle()">Shuffle</button>
+    <button class="btn-primary px-6" [disabled]="!valid() || loading()" (click)="start()">
+      {{ loading() ? 'Solving…' : results() ? 'Race again' : 'Start race' }}
+    </button>
+  </div>
+  @if (!valid()) {
+    <p class="mt-2 text-sm text-amber-600">Enter each digit from 0 to 8 once.</p>
+  }
+  @if (error()) {
+    <p class="mt-3 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-500" role="alert">
+      {{ error() }}
+    </p>
+  }
+  <p class="mt-3 text-sm text-muted">
+    All four algorithms solve the same board. Long paths are sped up so every lane finishes.
+  </p>
+</section>
+
+<div class="grid gap-6 sm:grid-cols-2">
+  @for (d of defs; track d.id; let i = $index) {
+    <section class="glass p-5">
+      <div class="mb-3 flex items-center justify-between">
+        <h3 class="font-medium">{{ d.label }}</h3>
+        @if (results()?.[i]; as r) {
+          <span class="text-sm tabular-nums text-muted"
+          >{{ step(r) }} / {{ r.cost_of_path }}</span
+          >
+        }
+      </div>
+      <div class="mx-auto w-full max-w-[230px]">
+        <app-puzzle-board [state]="boardOf(i)" [ring]="ringOf(i)" />
+      </div>
+      @if (results()?.[i]; as r) {
+        <dl class="mt-4 space-y-1.5 text-sm tabular-nums">
+          <div class="flex justify-between">
+            <dt class="text-muted">Path cost</dt>
+            <dd [class.best]="r.cost_of_path === bests().cost">{{ r.cost_of_path }}</dd>
+          </div>
+          <div class="flex justify-between">
+            <dt class="text-muted">Nodes expanded</dt>
+            <dd [class.best]="r.nodes_expanded === bests().nodes">
+              {{ r.nodes_expanded.toLocaleString() }}
+            </dd>
+          </div>
+          <div class="flex justify-between">
+            <dt class="text-muted">Time</dt>
+            <dd [class.best]="r.running_time === bests().time">
+              {{ r.running_time.toFixed(1) }} ms
+            </dd>
+          </div>
+        </dl>
+      } @else if (results()) {
+        <p class="mt-4 text-center text-sm text-muted">No result</p>
+      }
+    </section>
+  }
+</div>

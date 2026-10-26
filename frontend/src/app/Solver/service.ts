@@ -12,19 +12,37 @@ export interface SolveRequest {
 
 export interface SolveResponse {
   path_to_goal: string[];
-  states: string[]; // board after every move, including the start
+  states: string[];
   cost_of_path: number;
   nodes_expanded: number;
   search_depth: number;
-  running_time: number; // ms
+  running_time: number;
+}
+
+export interface TraceNode {
+  state: string;
+  parent: number;
+  depth: number;
+  on_path: boolean;
+}
+
+export interface TraceResponse {
+  nodes: TraceNode[];
+  total_expanded: number;
+  sample_count: number;
+  truncated: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
 export class SolverService {
   private http = inject(HttpClient);
-  private url = 'http://127.0.0.1:8000/solve';
+  private url = 'http://13.49.241.24:8000';
 
   solve(req: SolveRequest) {
-    return this.http.post<SolveResponse>(this.url, req);
+    return this.http.post<SolveResponse>(`${this.url}/solve`, req);
+  }
+
+  trace(req: SolveRequest) {
+    return this.http.post<TraceResponse>(`${this.url}/trace`, req);
   }
 }

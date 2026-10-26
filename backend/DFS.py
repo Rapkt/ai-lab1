@@ -2,7 +2,7 @@ from schema.Node import Node
 from collections import deque
 from tools import *
 
-def solve_dfs(inti_state: str):
+def solve_dfs(inti_state: str,trace = None):
     frontier = deque([Node(state=inti_state)])
 
     explored = set()
@@ -16,6 +16,8 @@ def solve_dfs(inti_state: str):
         nodes_expanded += 1
         explored.add(node.state)
         max_depth = max(max_depth, node.depth)
+        node.log(trace)
+
         if(cheks(node.state)):
             path = node.get_path()
             return path, len(path),nodes_expanded,max_depth

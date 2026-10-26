@@ -1,0 +1,15 @@
+<svg viewBox="0 0 24 24" class="block h-[1.15em] w-[1.15em]" aria-hidden="true"
+     fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  @switch (name()) {
+    @case ('play') { <path fill="currentColor" stroke="none" d="M8 5.14v13.72a1 1 0 0 0 1.5.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86A1 1 0 0 0 8 5.14z" /> }
+    @case ('pause') { <rect fill="currentColor" stroke="none" x="6" y="5" width="4" height="14" rx="1.4" /><rect fill="currentColor" stroke="none" x="14" y="5" width="4" height="14" rx="1.4" /> }
+    @case ('prev') { <path d="M15 5l-7 7 7 7" /> }
+    @case ('next') { <path d="M9 5l7 7-7 7" /> }
+    @case ('first') { <rect fill="currentColor" stroke="none" x="5" y="5" width="2.6" height="14" rx="1.3" /><path fill="currentColor" stroke="none" d="M19.5 6v12a.9.9 0 0 1-1.4.75l-8.6-6a.9.9 0 0 1 0-1.5l8.6-6A.9.9 0 0 1 19.5 6z" /> }
+    @case ('last') { <rect fill="currentColor" stroke="none" x="16.4" y="5" width="2.6" height="14" rx="1.3" /><path fill="currentColor" stroke="none" d="M4.5 6v12a.9.9 0 0 0 1.4.75l8.6-6a.9.9 0 0 0 0-1.5l-8.6-6A.9.9 0 0 0 4.5 6z" /> }
+    @case ('sun') { <circle cx="12" cy="12" r="4" /><path d="M12 2.5v2M12 19.5v2M4.6 4.6L6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4" /> }
+    @case ('moon') { <path fill="currentColor" stroke="none" d="M20.5 13.2A8.5 8.5 0 1 1 10.8 3.5a6.8 6.8 0 0 0 9.7 9.7z" /> }
+    @case ('volume') { <path fill="currentColor" stroke="none" d="M4 9.5v5h3.6l4.6 3.7V5.8L7.6 9.5H4z" /><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11" /> }
+    @case ('mute') { <path fill="currentColor" stroke="none" d="M4 9.5v5h3.6l4.6 3.7V5.8L7.6 9.5H4z" /><path d="M16 9.5l5 5M21 9.5l-5 5" /> }
+  }
+</svg>

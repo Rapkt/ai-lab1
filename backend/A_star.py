@@ -2,7 +2,7 @@ import heapq
 from schema.Node import Node
 from tools import *
 
-def solve_A_star(inti_state: str,h_type: str):
+def solve_A_star(inti_state: str,h_type: str,trace = None):
     frontier = []
     explored = set()
     counter = 0    # tie breaker
@@ -17,7 +17,7 @@ def solve_A_star(inti_state: str,h_type: str):
         nodes_expanded += 1
         max_depth = max(max_depth, node.depth)
         path = node.get_path()
-
+        node.log(trace)
         if(cheks(str(node.state))):
             return path,len(path),nodes_expanded,max_depth
 

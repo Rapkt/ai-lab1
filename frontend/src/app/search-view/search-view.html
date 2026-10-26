@@ -1,0 +1,73 @@
+<section class="glass mb-6 p-6">
+  <div class="flex gap-2">
+    <input class="field min-w-0 flex-1" [value]="initState()" maxlength="9" inputmode="numeric"
+           (input)="setInit($any($event.target).value)" aria-label="Starting board" />
+    <button class="btn-soft" (click)="setInit(shuffle())">Shuffle</button>
+  </div>
+  @if (!valid()) { <p class="mt-2 text-sm text-amber-600">Enter each digit from 0 to 8 once.</p> }
+
+  <div class="seg mt-4" [style.--n]="algorithms.length" role="tablist">
+    <span class="seg-pill" [style.transform]="'translateX(' + algoIndex() * 100 + '%)'"></span>
+    @for (a of algorithms; track a.id) {
+      <button class="seg-item" role="tab" [class.active]="algorithm() === a.id" (click)="algorithm.set(a.id)">
+        <span class="sm:hidden">{{ a.short }}</span><span class="hidden sm:inline">{{ a.label }}</span>
+      </button>
+    }
+  </div>
+  @if (algorithm() === 'A_Star') {
+    <div class="seg mt-3 max-w-xs" [style.--n]="heuristics.length" role="tablist">
+      <span class="seg-pill" [style.transform]="'translateX(' + heuristicIndex() * 100 + '%)'"></span>
+      @for (h of heuristics; track h) {
+        <button class="seg-item capitalize" role="tab" [class.active]="heuristic() === h" (click)="heuristic.set(h)">{{ h }}</button>
+      }
+    </div>
+  }
+
+  <button class="btn-primary mt-5 w-full" [disabled]="!valid() || loading()" (click)="visualize()">
+    {{ loading() ? 'Searching…' : 'Visualize' }}
+  </button>
+  @if (error()) { <p class="mt-3 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-500" role="alert">{{ error() }}</p> }
+</section>
+
+<section class="glass p-4 sm:p-6">
+  <div class="relative">
+    <canvas #cv class="block h-[min(82vw,640px)] w-full" aria-label="Search tree"></canvas>
+    @if (data()) {
+      <div class="glass absolute left-2 top-2 w-24 p-2 sm:w-28">
+        <p class="mb-1 text-center text-[11px] text-muted">{{ done() ? 'Goal' : 'Expanding' }}</p>
+        <app-puzzle-board [state]="current()" />
+      </div>
+    }
+  </div>
+
+  <div class="mt-4 flex items-center gap-3">
+    <button class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#0a84ff] text-white shadow-lg shadow-sky-500/30 transition active:scale-95 disabled:opacity-30"
+            [disabled]="!data()" (click)="playing() ? pause() : play()" [attr.aria-label]="playing() ? 'Pause' : 'Play'">
+      <app-icon [name]="playing() ? 'pause' : 'play'" />
+    </button>
+    <input type="range" class="min-w-0 flex-1 accent-[#0a84ff]" min="0" [max]="data()?.sample_count ?? 0"
+           [value]="shown()" [disabled]="!data()" (input)="scrub(+$any($event.target).value)" aria-label="Expansion step" />
+    <label class="hidden items-center gap-2 text-xs text-muted sm:flex">Slow
+      <input type="range" min="1" max="10" step="0.5" [value]="speed()" (input)="speed.set(+$any($event.target).value)"
+             class="w-24 accent-neutral-400" /> Fast
+    </label>
+  </div>
+
+  @if (data(); as d) {
+    <div class="mt-5 grid grid-cols-3 gap-4">
+      <div><p class="text-2xl font-semibold tabular-nums">{{ shown().toLocaleString() }}</p><p class="text-sm text-muted">Nodes drawn</p></div>
+      <div><p class="text-2xl font-semibold tabular-nums">{{ d.total_expanded.toLocaleString() }}</p><p class="text-sm text-muted">Total expanded</p></div>
+      <div><p class="text-2xl font-semibold tabular-nums">{{ pathLen() }}</p><p class="text-sm text-muted">Solution moves</p></div>
+    </div>
+    @if (d.truncated) {
+      <p class="mt-3 text-sm text-muted">Drawing the first {{ d.sample_count.toLocaleString() }} expansions; the solution path is always shown in full.</p>
+    }
+    @if (algorithm() === 'Iterative_DFS') {
+      <p class="mt-3 text-sm text-muted">Showing the final depth-limited pass, the one that found the goal.</p>
+    }
+  }
+  <div class="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-muted">
+    <span class="flex items-center gap-2"><span class="inline-block h-2 w-14 rounded-full" style="background:linear-gradient(90deg,hsl(200 85% 60%),hsl(330 85% 60%))"></span>Expanded (colour = depth)</span>
+    <span class="flex items-center gap-2"><span class="inline-block h-1 w-14 rounded-full bg-[#0a84ff] shadow-[0_0_8px_#0a84ff]"></span>Solution path</span>
+  </div>
+</section>
